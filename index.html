@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlapping Highlights Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="diff-column">
+        <!-- First section: Single highlight without bars -->
+        <div class="code-line-container">
+            <div class="line-number">1</div>
+            <div class="bars-container"></div>
+            <div class="code-line">// First section - single highlight</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">2</div>
+            <div class="bars-container"></div>
+            <div class="code-line">function example() {</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">3</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  return true;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">4</div>
+            <div class="bars-container"></div>
+            <div class="code-line">}</div>
+        </div>
+
+        <!-- Second section: No highlights -->
+        <div class="code-line-container">
+            <div class="line-number">5</div>
+            <div class="bars-container"></div>
+            <div class="code-line"></div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">6</div>
+            <div class="bars-container"></div>
+            <div class="code-line">// Second section - no highlights</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">7</div>
+            <div class="bars-container"></div>
+            <div class="code-line">const value = 42;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">8</div>
+            <div class="bars-container"></div>
+            <div class="code-line">console.log(value);</div>
+        </div>
+
+        <!-- Third section: Overlapping highlights with bars -->
+        <div class="code-line-container">
+            <div class="line-number">9</div>
+            <div class="bars-container"></div>
+            <div class="code-line"></div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">10</div>
+            <div class="bars-container"></div>
+            <div class="code-line">// Third section - overlapping highlights</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">11</div>
+            <div class="bars-container"></div>
+            <div class="code-line">template: '</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">12</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  &lt;div&gt;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">13</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    &lt;h1&gt;Title&lt;/h1&gt;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">14</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  &lt;/div&gt;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">15</div>
+            <div class="bars-container"></div>
+            <div class="code-line">',</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">16</div>
+            <div class="bars-container"></div>
+            <div class="code-line">styles: []</div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
