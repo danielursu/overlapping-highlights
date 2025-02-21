@@ -138,30 +138,34 @@ function clearHighlights() {
 // Function to update highlights on window resize
 function updateHighlights() {
     // Store the highlight ranges
-    const highlights = [
-        // First section: Single highlight without bars (lines 1-4)
+    const singleHighlights = [
+        // Component decorator highlight
         {
             start: 1,
-            end: 4,
+            end: 2,
             type: 'single',
             snippetId: 'snippet1'
-        },
-        // Third section: Overlapping highlights with bars (lines 10-14 and 13-15)
+        }
+    ];
+    
+    const overlappingHighlights = [
+        // Template section with overlapping highlights
         {
-            start: 10,
+            start: 8,
             end: 16,
             type: 'overlap',
-            class: 'highlight1',  // First bar
-            hoverEnd: 15,  // Added to control hover region separately
+            class: 'highlight1',
+            hoverEnd: 16,
             badgeNumber: '1',
             snippetId: 'snippet2'
         },
+        // User stats section
         {
-            start: 13,
-            end: 15,
+            start: 11,
+            end: 14,
             type: 'overlap',
-            class: 'highlight2',  // Second bar
-            hoverEnd: 14,  // Added to control hover region separately
+            class: 'highlight2',
+            hoverEnd: 14,
             badgeNumber: '2',
             snippetId: 'snippet3'
         }
@@ -171,23 +175,59 @@ function updateHighlights() {
     clearHighlights();
     
     // Create hover regions first
-    highlights.forEach(range => {
+    singleHighlights.forEach(range => {
         const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
-        // Use hoverEnd if defined, otherwise use end
+        const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
+        
+        if (startLine && endLine) {
+            createHighlightBackground(startLine, endLine);
+            // Create hover region without dimming effect
+            const hoverRegion = document.createElement('div');
+            hoverRegion.classList.add('hover-region');
+            hoverRegion.dataset.snippetId = range.snippetId;
+            
+            const startRect = startLine.getBoundingClientRect();
+            const diffRect = startLine.closest('.diff-column').getBoundingClientRect();
+            
+            // Calculate total height based on number of lines
+            let totalHeight = 0;
+            let currentLine = startLine;
+            while (currentLine && currentLine !== endLine.nextElementSibling) {
+                totalHeight += getElementHeight(currentLine);
+                currentLine = currentLine.nextElementSibling;
+            }
+            
+            hoverRegion.style.top = `${startRect.top - diffRect.top}px`;
+            hoverRegion.style.height = `${totalHeight}px`;
+            
+            startLine.closest('.diff-column').appendChild(hoverRegion);
+            
+            // Add hover listeners without dimming effect
+            hoverRegion.addEventListener('mouseenter', () => {
+                document.querySelectorAll(`[data-snippet-id="${range.snippetId}"]`).forEach(el => {
+                    el.classList.add('hover');
+                });
+            });
+            
+            hoverRegion.addEventListener('mouseleave', () => {
+                document.querySelectorAll(`[data-snippet-id="${range.snippetId}"]`).forEach(el => {
+                    el.classList.remove('hover');
+                });
+            });
+        }
+    });
+    
+    overlappingHighlights.forEach(range => {
+        const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
         const endLine = document.querySelector(`.code-line-container:nth-child(${range.hoverEnd || range.end})`);
         
         if (startLine && endLine) {
-            if (range.type === 'single') {
-                createHighlightBackground(startLine, endLine);
-                createHoverRegion(startLine, endLine, range.snippetId);
-            } else {
-                createHoverRegion(startLine, endLine, range.snippetId);
-            }
+            createHoverRegion(startLine, endLine, range.snippetId);
         }
     });
     
     // Create a single background for the overlapped section
-    const overlappingRanges = highlights.filter(r => r.type === 'overlap');
+    const overlappingRanges = overlappingHighlights;
     if (overlappingRanges.length > 0) {
         const minStart = Math.min(...overlappingRanges.map(r => r.start));
         const maxEnd = Math.max(...overlappingRanges.map(r => r.hoverEnd || r.end));
@@ -201,7 +241,7 @@ function updateHighlights() {
     }
     
     // Create bars for overlapping highlights
-    highlights.forEach(range => {
+    overlappingHighlights.forEach(range => {
         if (range.type === 'overlap' && range.class) {
             const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
             // Use hoverEnd if defined, otherwise use end for consistency with hover region

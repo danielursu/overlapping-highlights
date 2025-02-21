@@ -10,103 +10,202 @@
     <div class="proposal-header">
         <h1>Overlapping Code Highlights</h1>
         <div class="instructions">
-            <p>👋 Hover over the colored bars to see how overlapping highlights work!</p>
+            <p>This demo illustrates how to highlight different sections of your code using overlapping effects. Hover over the colored bars to easily identify each highlighted section.</p>
             <div class="features">
-                <span>✨ Multiple regions</span>
-                <span>🔢 Numbered badges</span>
-                <span>✨ Smart hover effects</span>
+                <span>📑 Multiple Highlights</span>
+                <span>🎯 Clear Section Markers</span>
+                <span>✨ Smooth Hover Effects</span>
             </div>
         </div>
     </div>
 
     <div class="diff-column">
-        <!-- First section: Single highlight without bars -->
         <div class="code-line-container">
             <div class="line-number">1</div>
             <div class="bars-container"></div>
-            <div class="code-line">// First section - single highlight</div>
+            <div class="code-line">import { Component } from '@angular/core';</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">2</div>
             <div class="bars-container"></div>
-            <div class="code-line">function example() {</div>
+            <div class="code-line">import { UserService } from './user.service';</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">3</div>
             <div class="bars-container"></div>
-            <div class="code-line">  return true;</div>
+            <div class="code-line"></div>
         </div>
         <div class="code-line-container">
             <div class="line-number">4</div>
             <div class="bars-container"></div>
-            <div class="code-line">}</div>
+            <div class="code-line">@Component({</div>
         </div>
-
-        <!-- Second section: No highlights -->
         <div class="code-line-container">
             <div class="line-number">5</div>
             <div class="bars-container"></div>
-            <div class="code-line"></div>
+            <div class="code-line">  selector: 'app-user-profile',</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">6</div>
             <div class="bars-container"></div>
-            <div class="code-line">// Second section - no highlights</div>
+            <div class="code-line">  standalone: true,</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">7</div>
             <div class="bars-container"></div>
-            <div class="code-line">const value = 42;</div>
+            <div class="code-line">  imports: [CommonModule],</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">8</div>
             <div class="bars-container"></div>
-            <div class="code-line">console.log(value);</div>
+            <div class="code-line">  template: `</div>
         </div>
-
-        <!-- Third section: Overlapping highlights with bars -->
         <div class="code-line-container">
             <div class="line-number">9</div>
             <div class="bars-container"></div>
-            <div class="code-line"></div>
+            <div class="code-line">    &lt;div class="user-profile"&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">10</div>
             <div class="bars-container"></div>
-            <div class="code-line">// Third section - overlapping highlights</div>
+            <div class="code-line">      &lt;h2&gt;{{ user.name }}&lt;/h2&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">11</div>
             <div class="bars-container"></div>
-            <div class="code-line">template: '</div>
+            <div class="code-line">      &lt;div class="user-stats"&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">12</div>
             <div class="bars-container"></div>
-            <div class="code-line">  &lt;div&gt;</div>
+            <div class="code-line">        &lt;span&gt;Posts: {{ user.posts }}&lt;/span&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">13</div>
             <div class="bars-container"></div>
-            <div class="code-line">    &lt;h1&gt;Title&lt;/h1&gt;</div>
+            <div class="code-line">        &lt;span&gt;Following: {{ user.following }}&lt;/span&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">14</div>
             <div class="bars-container"></div>
-            <div class="code-line">  &lt;/div&gt;</div>
+            <div class="code-line">      &lt;/div&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">15</div>
             <div class="bars-container"></div>
-            <div class="code-line">',</div>
+            <div class="code-line">    &lt;/div&gt;</div>
         </div>
         <div class="code-line-container">
             <div class="line-number">16</div>
             <div class="bars-container"></div>
-            <div class="code-line">styles: []</div>
+            <div class="code-line">  `,</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">17</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  styles: [`</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">18</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    .user-profile {</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">19</div>
+            <div class="bars-container"></div>
+            <div class="code-line">      padding: 1rem;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">20</div>
+            <div class="bars-container"></div>
+            <div class="code-line">      border-radius: 8px;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">21</div>
+            <div class="bars-container"></div>
+            <div class="code-line">      background: #f5f5f5;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">22</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    }</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">23</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    .user-stats {</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">24</div>
+            <div class="bars-container"></div>
+            <div class="code-line">      display: flex;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">25</div>
+            <div class="bars-container"></div>
+            <div class="code-line">      gap: 1rem;</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">26</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    }</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">27</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  `]</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">28</div>
+            <div class="bars-container"></div>
+            <div class="code-line">})</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">29</div>
+            <div class="bars-container"></div>
+            <div class="code-line">export class UserProfileComponent {</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">30</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  constructor(private userService: UserService) {}</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">31</div>
+            <div class="bars-container"></div>
+            <div class="code-line"></div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">32</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  user = {</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">33</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    name: 'John Doe',</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">34</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    posts: 42,</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">35</div>
+            <div class="bars-container"></div>
+            <div class="code-line">    following: 123</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">36</div>
+            <div class="bars-container"></div>
+            <div class="code-line">  };</div>
+        </div>
+        <div class="code-line-container">
+            <div class="line-number">37</div>
+            <div class="bars-container"></div>
+            <div class="code-line">}</div>
         </div>
     </div>
-
     <script src="main.js"></script>
 </body>
 </html>
