@@ -18,8 +18,45 @@ function createHighlightBackground(startLineDiv, endLineDiv) {
     });
 }
 
+// Function to create hover region
+function createHoverRegion(startLineDiv, endLineDiv, snippetId) {
+    const startBarsContainer = startLineDiv.querySelector('.bars-container');
+    const endBarsContainer = endLineDiv.querySelector('.bars-container');
+    const diffColumn = startLineDiv.closest('.diff-column');
+    
+    requestAnimationFrame(() => {
+        const startRect = startBarsContainer.getBoundingClientRect();
+        const endRect = endBarsContainer.getBoundingClientRect();
+        const diffRect = diffColumn.getBoundingClientRect();
+        
+        const hoverRegion = document.createElement('div');
+        hoverRegion.classList.add('hover-region');
+        hoverRegion.dataset.snippetId = snippetId;
+        
+        // Calculate the height and position based on the bars container
+        const height = endRect.bottom - startRect.top;
+        hoverRegion.style.top = `${startRect.top - diffRect.top}px`;
+        hoverRegion.style.height = `${height}px`;
+        
+        diffColumn.appendChild(hoverRegion);
+        
+        // Add hover listeners to highlight the specific snippet
+        hoverRegion.addEventListener('mouseenter', () => {
+            document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
+                el.classList.add('hover');
+            });
+        });
+        
+        hoverRegion.addEventListener('mouseleave', () => {
+            document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
+                el.classList.remove('hover');
+            });
+        });
+    });
+}
+
 // Function to create vertical bars
-function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber) {
+function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber, snippetId) {
     const startBarsContainer = startLineDiv.querySelector('.bars-container');
     const endBarsContainer = endLineDiv.querySelector('.bars-container');
     
@@ -29,6 +66,7 @@ function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber
         
         const highlight = document.createElement('div');
         highlight.classList.add('highlight-multiline', highlightClass);
+        highlight.dataset.snippetId = snippetId;
         
         // Add badge
         const badge = document.createElement('div');
@@ -42,12 +80,25 @@ function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber
         
         // Add the highlight to the first bars container
         startBarsContainer.appendChild(highlight);
+        
+        // Add hover effect to the bar
+        highlight.addEventListener('mouseenter', () => {
+            document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
+                el.classList.add('hover');
+            });
+        });
+        
+        highlight.addEventListener('mouseleave', () => {
+            document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
+                el.classList.remove('hover');
+            });
+        });
     });
 }
 
 // Function to clear all highlights
 function clearHighlights() {
-    document.querySelectorAll('.highlight-multiline, .highlight-background').forEach(el => el.remove());
+    document.querySelectorAll('.highlight-multiline, .highlight-background, .hover-region').forEach(el => el.remove());
 }
 
 // Function to update highlights on window resize
@@ -58,7 +109,8 @@ function updateHighlights() {
         {
             start: 1,
             end: 4,
-            type: 'single'
+            type: 'single',
+            snippetId: 'snippet1'
         },
         // Third section: Overlapping highlights with bars (lines 11-15 and 15-16)
         {
@@ -67,7 +119,8 @@ function updateHighlights() {
             type: 'overlap',
             class: 'highlight1',  // First bar
             backgroundEnd: 15,
-            badgeNumber: '1'
+            badgeNumber: '1',
+            snippetId: 'snippet2'
         },
         {
             start: 13,
@@ -75,12 +128,23 @@ function updateHighlights() {
             type: 'overlap',
             class: 'highlight2',  // Second bar
             backgroundEnd: 15,
-            badgeNumber: '2'
+            badgeNumber: '2',
+            snippetId: 'snippet3'
         }
     ];
     
     // Clear existing highlights
     clearHighlights();
+    
+    // Create hover regions first
+    highlights.forEach(range => {
+        const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
+        const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
+        
+        if (startLine && endLine) {
+            createHoverRegion(startLine, endLine, range.snippetId);
+        }
+    });
     
     // Create a single background for the overlapped section
     const overlappingRanges = highlights.filter(r => r.type === 'overlap');
@@ -113,7 +177,7 @@ function updateHighlights() {
             const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
             
             if (startLine && endLine) {
-                createVerticalBar(startLine, endLine, range.class, range.badgeNumber);
+                createVerticalBar(startLine, endLine, range.class, range.badgeNumber, range.snippetId);
             }
         }
     });
