@@ -56,20 +56,23 @@
     pointer-events: auto;
     cursor: pointer;
     z-index: 3;
+    border: 1px dashed transparent;
+    transition: border-color 0.15s ease;
 }
 
-.hover-region.hover {
-    border-top: 1px dashed rgba(128, 128, 128, 0.4);
-    border-bottom: 1px dashed rgba(128, 128, 128, 0.4);
+.hover-region:hover {
+    border-color: rgba(128, 128, 128, 0.4);
 }
 
 /* Vertical bars */
 .highlight-multiline {
     position: absolute;
     width: 2px;
-    pointer-events: auto; /* Enable hover on bars */
+    pointer-events: auto;
     cursor: pointer;
     background: none;
+    opacity: 1;
+    transition: opacity 0.15s ease;
 }
 
 .highlight-multiline.highlight1 {
@@ -84,8 +87,9 @@
     z-index: 2;
 }
 
-.highlight-multiline.hover {
-    background-color: rgba(255, 165, 0, 0.8); /* Slightly darker on hover */
+/* Dimmed state */
+.highlight-multiline.dimmed {
+    opacity: 0.2;
 }
 
 /* Badge styles */
@@ -105,8 +109,10 @@
     justify-content: center;
     pointer-events: none;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    opacity: inherit;
+    transition: opacity 0.15s ease;
 }
 
 .highlight-multiline.hover .highlight-badge {
-    background-color: rgba(255, 165, 0, 0.8); /* Match the bar hover state */
+    background-color: rgba(255, 165, 0); /* Match the bar hover state */
 }

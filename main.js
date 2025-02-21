@@ -40,16 +40,23 @@ function createHoverRegion(startLineDiv, endLineDiv, snippetId) {
         
         diffColumn.appendChild(hoverRegion);
         
-        // Add hover listeners to highlight the specific snippet
+        // Add hover listeners
         hoverRegion.addEventListener('mouseenter', () => {
+            // Dim all bars
+            document.querySelectorAll('.highlight-multiline').forEach(bar => {
+                bar.classList.add('dimmed');
+            });
+            // Un-dim bars for this snippet
             document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
+                el.classList.remove('dimmed');
                 el.classList.add('hover');
             });
         });
         
         hoverRegion.addEventListener('mouseleave', () => {
-            document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
-                el.classList.remove('hover');
+            // Remove all dimming and hover states
+            document.querySelectorAll('.highlight-multiline').forEach(bar => {
+                bar.classList.remove('dimmed', 'hover');
             });
         });
     });
@@ -83,14 +90,21 @@ function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber
         
         // Add hover effect to the bar
         highlight.addEventListener('mouseenter', () => {
+            // Dim all bars
+            document.querySelectorAll('.highlight-multiline').forEach(bar => {
+                bar.classList.add('dimmed');
+            });
+            // Un-dim bars for this snippet
             document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
+                el.classList.remove('dimmed');
                 el.classList.add('hover');
             });
         });
         
         highlight.addEventListener('mouseleave', () => {
-            document.querySelectorAll(`[data-snippet-id="${snippetId}"]`).forEach(el => {
-                el.classList.remove('hover');
+            // Remove all dimming and hover states
+            document.querySelectorAll('.highlight-multiline').forEach(bar => {
+                bar.classList.remove('dimmed', 'hover');
             });
         });
     });
