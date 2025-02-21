@@ -1,18 +1,32 @@
+// Function to get element height including computed styles
+function getElementHeight(element) {
+    const computedStyle = window.getComputedStyle(element);
+    return element.getBoundingClientRect().height + 
+           parseFloat(computedStyle.marginTop) + 
+           parseFloat(computedStyle.marginBottom);
+}
+
 // Function to create a highlight background
 function createHighlightBackground(startLineDiv, endLineDiv) {
+    const diffColumn = startLineDiv.closest('.diff-column');
+    
     requestAnimationFrame(() => {
         const startRect = startLineDiv.getBoundingClientRect();
-        const endRect = endLineDiv.getBoundingClientRect();
-        const diffColumn = startLineDiv.closest('.diff-column');
         const diffRect = diffColumn.getBoundingClientRect();
+        
+        // Calculate total height based on number of lines
+        let totalHeight = 0;
+        let currentLine = startLineDiv;
+        while (currentLine && currentLine !== endLineDiv.nextElementSibling) {
+            totalHeight += getElementHeight(currentLine);
+            currentLine = currentLine.nextElementSibling;
+        }
         
         const background = document.createElement('div');
         background.classList.add('highlight-background');
         
-        // Calculate the height and position
-        const height = endRect.bottom - startRect.top;
         background.style.top = `${startRect.top - diffRect.top}px`;
-        background.style.height = `${height}px`;
+        background.style.height = `${totalHeight}px`;
         
         diffColumn.appendChild(background);
     });
@@ -20,23 +34,26 @@ function createHighlightBackground(startLineDiv, endLineDiv) {
 
 // Function to create hover region
 function createHoverRegion(startLineDiv, endLineDiv, snippetId) {
-    const startBarsContainer = startLineDiv.querySelector('.bars-container');
-    const endBarsContainer = endLineDiv.querySelector('.bars-container');
     const diffColumn = startLineDiv.closest('.diff-column');
     
     requestAnimationFrame(() => {
-        const startRect = startBarsContainer.getBoundingClientRect();
-        const endRect = endBarsContainer.getBoundingClientRect();
+        const startRect = startLineDiv.getBoundingClientRect();
         const diffRect = diffColumn.getBoundingClientRect();
+        
+        // Calculate total height based on number of lines
+        let totalHeight = 0;
+        let currentLine = startLineDiv;
+        while (currentLine && currentLine !== endLineDiv.nextElementSibling) {
+            totalHeight += getElementHeight(currentLine);
+            currentLine = currentLine.nextElementSibling;
+        }
         
         const hoverRegion = document.createElement('div');
         hoverRegion.classList.add('hover-region');
         hoverRegion.dataset.snippetId = snippetId;
         
-        // Calculate the height and position based on the bars container
-        const height = endRect.bottom - startRect.top;
         hoverRegion.style.top = `${startRect.top - diffRect.top}px`;
-        hoverRegion.style.height = `${height}px`;
+        hoverRegion.style.height = `${totalHeight}px`;
         
         diffColumn.appendChild(hoverRegion);
         
@@ -65,11 +82,15 @@ function createHoverRegion(startLineDiv, endLineDiv, snippetId) {
 // Function to create vertical bars
 function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber, snippetId) {
     const startBarsContainer = startLineDiv.querySelector('.bars-container');
-    const endBarsContainer = endLineDiv.querySelector('.bars-container');
     
     requestAnimationFrame(() => {
-        const startRect = startBarsContainer.getBoundingClientRect();
-        const endRect = endBarsContainer.getBoundingClientRect();
+        // Calculate total height based on number of lines
+        let totalHeight = 0;
+        let currentLine = startLineDiv;
+        while (currentLine && currentLine !== endLineDiv.nextElementSibling) {
+            totalHeight += getElementHeight(currentLine);
+            currentLine = currentLine.nextElementSibling;
+        }
         
         const highlight = document.createElement('div');
         highlight.classList.add('highlight-multiline', highlightClass);
@@ -81,9 +102,8 @@ function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber
         badge.textContent = badgeNumber;
         highlight.appendChild(badge);
         
-        // Calculate the height
-        const height = endRect.bottom - startRect.top;
-        highlight.style.height = `${height}px`;
+        // Set the height
+        highlight.style.height = `${totalHeight}px`;
         
         // Add the highlight to the first bars container
         startBarsContainer.appendChild(highlight);
@@ -126,22 +146,22 @@ function updateHighlights() {
             type: 'single',
             snippetId: 'snippet1'
         },
-        // Third section: Overlapping highlights with bars (lines 11-15 and 15-16)
+        // Third section: Overlapping highlights with bars (lines 10-14 and 13-15)
         {
             start: 10,
-            end: 15,
+            end: 16,
             type: 'overlap',
             class: 'highlight1',  // First bar
-            backgroundEnd: 15,
+            hoverEnd: 15,  // Added to control hover region separately
             badgeNumber: '1',
             snippetId: 'snippet2'
         },
         {
             start: 13,
-            end: 16,
+            end: 15,
             type: 'overlap',
             class: 'highlight2',  // Second bar
-            backgroundEnd: 15,
+            hoverEnd: 14,  // Added to control hover region separately
             badgeNumber: '2',
             snippetId: 'snippet3'
         }
@@ -153,10 +173,16 @@ function updateHighlights() {
     // Create hover regions first
     highlights.forEach(range => {
         const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
-        const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
+        // Use hoverEnd if defined, otherwise use end
+        const endLine = document.querySelector(`.code-line-container:nth-child(${range.hoverEnd || range.end})`);
         
         if (startLine && endLine) {
-            createHoverRegion(startLine, endLine, range.snippetId);
+            if (range.type === 'single') {
+                createHighlightBackground(startLine, endLine);
+                createHoverRegion(startLine, endLine, range.snippetId);
+            } else {
+                createHoverRegion(startLine, endLine, range.snippetId);
+            }
         }
     });
     
@@ -164,31 +190,22 @@ function updateHighlights() {
     const overlappingRanges = highlights.filter(r => r.type === 'overlap');
     if (overlappingRanges.length > 0) {
         const minStart = Math.min(...overlappingRanges.map(r => r.start));
-        const maxBackgroundEnd = Math.max(...overlappingRanges.map(r => r.backgroundEnd || r.start));
+        const maxEnd = Math.max(...overlappingRanges.map(r => r.hoverEnd || r.end));
         
         const startLine = document.querySelector(`.code-line-container:nth-child(${minStart})`);
-        const endLine = document.querySelector(`.code-line-container:nth-child(${maxBackgroundEnd})`);
+        const endLine = document.querySelector(`.code-line-container:nth-child(${maxEnd})`);
         
         if (startLine && endLine) {
             createHighlightBackground(startLine, endLine);
         }
     }
     
-    // Create single highlights
-    highlights.filter(r => r.type === 'single').forEach(range => {
-        const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
-        const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
-        
-        if (startLine && endLine) {
-            createHighlightBackground(startLine, endLine);
-        }
-    });
-    
     // Create bars for overlapping highlights
     highlights.forEach(range => {
         if (range.type === 'overlap' && range.class) {
             const startLine = document.querySelector(`.code-line-container:nth-child(${range.start})`);
-            const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
+            // Use hoverEnd if defined, otherwise use end for consistency with hover region
+            const endLine = document.querySelector(`.code-line-container:nth-child(${range.hoverEnd || range.end})`);
             
             if (startLine && endLine) {
                 createVerticalBar(startLine, endLine, range.class, range.badgeNumber, range.snippetId);
