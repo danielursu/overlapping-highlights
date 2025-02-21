@@ -19,7 +19,7 @@ function createHighlightBackground(startLineDiv, endLineDiv) {
 }
 
 // Function to create vertical bars
-function createVerticalBar(startLineDiv, endLineDiv, highlightClass) {
+function createVerticalBar(startLineDiv, endLineDiv, highlightClass, badgeNumber) {
     const startBarsContainer = startLineDiv.querySelector('.bars-container');
     const endBarsContainer = endLineDiv.querySelector('.bars-container');
     
@@ -29,6 +29,12 @@ function createVerticalBar(startLineDiv, endLineDiv, highlightClass) {
         
         const highlight = document.createElement('div');
         highlight.classList.add('highlight-multiline', highlightClass);
+        
+        // Add badge
+        const badge = document.createElement('div');
+        badge.classList.add('highlight-badge');
+        badge.textContent = badgeNumber;
+        highlight.appendChild(badge);
         
         // Calculate the height
         const height = endRect.bottom - startRect.top;
@@ -59,15 +65,17 @@ function updateHighlights() {
             start: 10,
             end: 15,
             type: 'overlap',
-            class: 'highlight1',  // Green bar
-            backgroundEnd: 15     // Background ends at line 15
+            class: 'highlight1',  // First bar
+            backgroundEnd: 15,
+            badgeNumber: '1'
         },
         {
             start: 13,
             end: 16,
             type: 'overlap',
-            class: 'highlight2',  // Blue bar
-            backgroundEnd: 15     // Background ends at line 15
+            class: 'highlight2',  // Second bar
+            backgroundEnd: 15,
+            badgeNumber: '2'
         }
     ];
     
@@ -105,7 +113,7 @@ function updateHighlights() {
             const endLine = document.querySelector(`.code-line-container:nth-child(${range.end})`);
             
             if (startLine && endLine) {
-                createVerticalBar(startLine, endLine, range.class);
+                createVerticalBar(startLine, endLine, range.class, range.badgeNumber);
             }
         }
     });

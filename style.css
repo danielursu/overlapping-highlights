@@ -27,7 +27,7 @@
 
 /* Bars container */
 .bars-container {
-    width: 8px;
+    width: 6px;
     position: relative;
     flex-shrink: 0;
 }
@@ -51,19 +51,38 @@
 /* Vertical bars */
 .highlight-multiline {
     position: absolute;
-    width: 4px;
+    width: 2px;
     pointer-events: none;
     background: none;
 }
 
 .highlight-multiline.highlight1 {
-    background-color: rgb(73, 176, 73);    /* Solid green bar */
+    background-color: rgba(255, 165, 0);
     left: 0;
     z-index: 1;
 }
 
 .highlight-multiline.highlight2 {
-    background-color: rgb(30, 144, 255);   /* Solid blue bar */
-    left: 4px;  /* Offset by 4px from the first bar */
+    background-color: rgba(255, 165, 0);
+    left: 4px;
     z-index: 2;
+}
+
+/* Badge styles */
+.highlight-badge {
+    position: absolute;
+    top: -6px;  /* Position slightly above the bar */
+    left: -5px; /* Center horizontally relative to the 2px bar */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;  /* Makes it circular */
+    background-color: rgba(255, 165, 0);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
